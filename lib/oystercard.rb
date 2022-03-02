@@ -1,11 +1,14 @@
-class Oystercard
+require 'journey'
+
+class OysterCard
   attr_reader :balance, :entry_station, :journeys
+
   LIMIT = 90
-  MINIMUM_FARE = 1
 
   def initialize(balance = 0)
     @balance = balance
     @journeys = []
+    @journey = Journey.new
   end
 
   def top_up(amount)
@@ -19,7 +22,7 @@ class Oystercard
   end
 
   def touch_out(exit_station)
-    deduct(MINIMUM_FARE)
+    deduct(@journey.fare)
     add_journey(exit_station)
   end
 
@@ -38,7 +41,7 @@ class Oystercard
   end
 
   def insufficient_balance_error
-    raise "The balance is insufficient. Minimum amount of £#{MINIMUM_FARE} required." if @balance < MINIMUM_FARE
+    raise "The balance is insufficient. Minimum amount of £#{Journey::MINIMUM_FARE} required." if @balance < Journey::MINIMUM_FARE
   end
 
   def add_journey(exit_station)

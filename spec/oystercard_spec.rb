@@ -1,78 +1,75 @@
 require 'oystercard'
 
-describe Oystercard do
-let(:entry_station) {double(:entry_station)}
-let(:exit_station) {double(:exit_station)}
-
-  it 'returns an instance of the class with a perameter' do
-    oystercard = Oystercard.new(10)
-    expect(oystercard).to be_an_instance_of(Oystercard)
-  end
+describe OysterCard do
+  let(:oystercard) { OysterCard.new }
+  let(:entry_station) {double(:entry_station)}
+  let(:exit_station) {double(:exit_station)}
+  let(:journey) {double :journey, fare: 1}
 
   it 'has a balance of 0 by default' do
-    expect(subject.balance).to eq 0
+    expect(oystercard.balance).to eq 0
   end
 
   it 'tops up the balance' do
-    subject.top_up(20)
-    expect(subject.balance).to eq 20
+    oystercard.top_up(20)
+    expect(oystercard.balance).to eq 20
   end
 
   it 'does not allow the balance to exceed the limit' do
-    message = "Balance exceeds the limit of £#{Oystercard::LIMIT}"
-    expect { subject.top_up(100) }.to raise_error(message)
+    message = "Balance exceeds the limit of £#{OysterCard::LIMIT}"
+    expect { oystercard.top_up(100) }.to raise_error(message)
   end
 
   it 'touches in' do
-    subject.top_up(Oystercard::MINIMUM_FARE)
-    subject.touch_in(entry_station)
-    expect(subject).to be_in_journey
+    oystercard.top_up(Journey::MINIMUM_FARE)
+    oystercard.touch_in(entry_station)
+    expect(oystercard).to be_in_journey
   end
 
   it 'touches out' do
-    subject.touch_out(exit_station)
-    expect(subject).to_not be_in_journey
+    oystercard.touch_out(exit_station)
+    expect(oystercard).to_not be_in_journey
   end
 
   it 'does not let to touch_in if there is insufficient balance' do 
-    message = "The balance is insufficient. Minimum amount of £#{Oystercard::MINIMUM_FARE} required."
-    expect { subject.touch_in(entry_station) }.to raise_error(message)
+    message = "The balance is insufficient. Minimum amount of £#{Journey::MINIMUM_FARE} required."
+    expect { oystercard.touch_in(entry_station) }.to raise_error(message)
   end
 
   it 'deducts the correct amount when touching out' do
-    subject.top_up(20)
-    subject.touch_in(entry_station)
-    expect { subject.touch_out(exit_station) }.to change{ subject.balance }.by(-Oystercard::MINIMUM_FARE)
+    oystercard.top_up(20)
+    oystercard.touch_in(entry_station)
+    expect { oystercard.touch_out(exit_station) }.to change{ oystercard.balance }.by(-Journey::PENALTY_FARE)
   end
 
   it "touch_in remembers the entry station" do
-    subject.top_up(20)
-    subject.touch_in(entry_station)
-    expect(subject.entry_station).to eq entry_station
+    oystercard.top_up(20)
+    oystercard.touch_in(entry_station)
+    expect(oystercard.entry_station).to eq entry_station
   end
   
   # it "touch_out forgets the entry station" do
-  #   subject.top_up(20)
-  #   subject.touch_in(entry_station)
-  #   subject.touch_out(exit_station)
-  #   expect(subject.entry_station).to be nil
+  #   oystercard.top_up(20)
+  #   oystercard.touch_in(entry_station)
+  #   oystercard.touch_out(exit_station)
+  #   expect(oystercard.entry_station).to be nil
   # end
 
   it "touch_out takes exit_station argument" do
-    subject.top_up(20)
-    subject.touch_in(entry_station)
-    expect(subject.touch_out(exit_station)).to_not be nil
+    oystercard.top_up(20)
+    oystercard.touch_in(entry_station)
+    expect(oystercard.touch_out(exit_station)).to_not be nil
   end
 
   it 'responds to an empty journeys array' do
-    expect(subject.journeys).to eq []
+    expect(oystercard.journeys).to eq []
   end
 
   it "adds the stations to the journey array" do
-    subject.top_up(20)
-    subject.touch_in(entry_station)
-    subject.touch_out(exit_station)
-    expect(subject.journeys).to include(entry_station => exit_station)
+    oystercard.top_up(20)
+    oystercard.touch_in(entry_station)
+    oystercard.touch_out(exit_station)
+    expect(oystercard.journeys).to include(entry_station => exit_station)
   end
 end
 
