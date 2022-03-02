@@ -22,5 +22,14 @@ describe JourneyLog do
     expect(log.finish("exit_station")).to include("exit_station")
   end
 
+  it 'returns a list of all previous journeys' do
+    testjourney = double(:testjourney)
+    allow(testjourney).to receive(:entry_station).and_return("entry_station")
+    allow(testjourney).to receive(:exit_station).and_return("exit_station")
+    log = JourneyLog.new(testjourney)
+    log.start("entry_station")
+    log.finish("exit_station")
+    expect(log.journeys).to eq ["entry_station", "exit_station"] 
+  end
 end
 

@@ -4,18 +4,24 @@ class JourneyLog
 
     def initialize(journey= Journey.new)
         @journey = journey
-        @journey_history = []
-    
+        @journeys = []
     end
     
     def start(entry_station)
-        @journey_history << @journey.entry_station
+        @journeys << @journey.entry_station
     end
 
+    def finish(exit_station)
+        @journeys << @journey.exit_station
+    end
+
+    def journeys
+        @journeys.clone
+    end
     private
 
     def current_journey
-        @journey.complete? ? @journey : @journey_history[0]
+        @journey.complete? ? @journey : @journeys[0]
 
     end
 end
