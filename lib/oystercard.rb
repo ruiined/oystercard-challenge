@@ -1,14 +1,13 @@
-require 'journey'
-require 'journeylog'
+require_relative 'journey'
+require_relative 'journeylog'
 
 class OysterCard
   attr_reader :balance
 
   LIMIT = 90
 
-  def initialize(balance = 0)
-    @balance = balance
-    @journey = Journey.new
+  def initialize
+    @balance = 0
     @journeylog = JourneyLog.new
   end
 
@@ -23,7 +22,7 @@ class OysterCard
   end
 
   def touch_out(exit_station)
-    deduct(@journey.fare)
+    deduct(@journeylog.to_charge)
     @journeylog.finish(exit_station)
   end
 
