@@ -1,38 +1,37 @@
 require 'journey'
 
 describe Journey do
-  let(:journey) { Journey.new }
+  let(:journey) { Journey.new(starting_station) }
+  let(:starting_station) { "Aldgate" }
+  let(:finishing_station) { "Bank" }
   
   it 'starts a journey' do
-    journey.starts("Aldgate")
-    expect(journey.entry_station).to include("Aldgate")
+    expect(journey.entry_station).to include(starting_station)
   end
 
   it 'finishes a journey' do
-    journey.finishes("Bank")
-    expect(journey.exit_station).to include("Bank")
+    journey.finishes(finishing_station)
+    expect(journey.exit_station).to include(finishing_station)
   end
 
   it 'does not complete a journey if there is no touch out' do
-    journey.starts("Aldgate")
     expect(journey).to_not be_complete
   end
 
   it "completes a journey if there is a touch out" do
-    journey.starts("Aldgate")
-    journey.finishes("Bank")
+    journey.finishes(finishing_station)
     expect(journey).to be_complete
   end
 
   it 'calculates a correct fare of a journey' do
-    journey.starts("Aldgate")
-    journey.finishes("Bank")
+    journey.finishes(finishing_station)
     expect(journey.fare).to eq Journey::MINIMUM_FARE
   end
 
   it 'calculates a penalty charge if there is no touch in' do
-    journey.finishes("Bank")
-    expect(journey.fare).to eq Journey::PENALTY_FARE
+    not_started_journey = Journey.new
+    not_started_journey.finishes(finishing_station)
+    expect(not_started_journey.fare).to eq Journey::PENALTY_FARE
   end
 
   it 'calculates a penalty charge if there is no touch out' do
