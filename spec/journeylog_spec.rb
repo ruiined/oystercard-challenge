@@ -1,35 +1,24 @@
 require 'journey_log'
 
-describe JourneyLog do
-  
+describe JourneyLog do  
+  let(:journey_log) { JourneyLog.new }
+  let(:journey) { double :journey, entry_station: "entry station", exit_station: "exit station" }
+
   it 'takes journey class parameter' do
-    testjourney = double(:testjourney)
-    log = JourneyLog.new(testjourney)
-    expect { log }.to_not raise_error
-  end
-#subjeclog
-  it 'start a journey ' do
-    testjourney = double(:testjourney)
-    allow(testjourney).to receive(:entry_station).and_return("entry_station")
-    log = JourneyLog.new(testjourney)
-    expect(log.start("entry_station")).to include("entry_station")
+    expect { journey_log }.to_not raise_error
   end
 
-  it 'finish a journey' do
-    testjourney = double(:testjourney)
-    allow(testjourney).to receive(:exit_station).and_return("exit_station")
-    log = JourneyLog.new(testjourney)
-    expect(log.finish("exit_station")).to include("exit_station")
+  it 'starts a journey ' do
+    expect(journey_log.start("entry station")).to include("entry station")
+  end
+
+  it 'finishes a journey' do
+    expect(journey_log.finish("exit station")).to include("exit station")
   end
 
   it 'returns a list of all previous journeys' do
-    testjourney = double(:testjourney)
-    allow(testjourney).to receive(:entry_station).and_return("entry_station")
-    allow(testjourney).to receive(:exit_station).and_return("exit_station")
-    log = JourneyLog.new(testjourney)
-    log.start("entry_station")
-    log.finish("exit_station")
-    expect(log.journeys).to eq ["entry_station", "exit_station"] 
+    journey_log.start("entry station")
+    journey_log.finish("exit station")
+    expect(journey_log.journeys).to eq ["entry station", "exit station"] 
   end
 end
-
