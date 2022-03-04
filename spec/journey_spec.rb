@@ -2,16 +2,16 @@ require 'journey'
 
 describe Journey do
   let(:journey) { Journey.new(starting_station) }
-  let(:starting_station) { "Aldgate" }
-  let(:finishing_station) { "Bank" }
+  let(:starting_station) { double name: "Aldgate", zone: 1 }
+  let(:finishing_station) { double name: "Bank", zone: 3 }
   
   it 'starts a journey' do
-    expect(journey.entry_station).to include(starting_station)
+    expect(journey.entry_station.name).to include(starting_station.name)
   end
 
   it 'finishes a journey' do
     journey.finishes(finishing_station)
-    expect(journey.exit_station).to include(finishing_station)
+    expect(journey.exit_station.name).to include(finishing_station.name)
   end
 
   it 'does not complete a journey if there is no touch out' do
@@ -25,7 +25,7 @@ describe Journey do
 
   it 'calculates a correct fare of a journey' do
     journey.finishes(finishing_station)
-    expect(journey.fare).to eq Journey::MINIMUM_FARE
+    expect(journey.fare).to eq 3
   end
 
   it 'calculates a penalty charge if there is no touch in' do

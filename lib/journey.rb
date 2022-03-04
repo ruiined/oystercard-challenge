@@ -1,3 +1,5 @@
+require_relative 'station'
+
 class Journey
   attr_reader :entry_station, :exit_station, :fare
 
@@ -15,7 +17,11 @@ class Journey
   end
   
   def fare
-    !@entry_station || !@exit_station ? PENALTY_FARE : MINIMUM_FARE
+    !@entry_station || !@exit_station ? PENALTY_FARE : zones
+  end
+
+  def zones
+    (@entry_station.zone - @exit_station.zone).abs + 1
   end
 
   def complete?
