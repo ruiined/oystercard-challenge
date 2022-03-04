@@ -1,5 +1,6 @@
 require_relative 'journey'
 require_relative 'journey_log'
+require_relative 'station'
 
 class OysterCard
   attr_reader :balance
@@ -16,14 +17,16 @@ class OysterCard
     @balance += amount
   end
 
-  def touch_in(entry_station)
+  def touch_in(entry_station, zone)
     insufficient_balance_error
-    @journey_log.start(entry_station)
+    station = Station.new(entry_station, zone)
+    @journey_log.start(station)
   end
 
-  def touch_out(exit_station)
+  def touch_out(exit_station, zone)
+    station = Station.new(exit_station, zone)
     deduct(@journey_log.to_charge)
-    @journey_log.finish(exit_station)
+    @journey_log.finish(station)
   end
 
   private

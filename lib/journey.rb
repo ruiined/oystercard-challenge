@@ -17,7 +17,7 @@ class Journey
   end
   
   def fare
-    !@entry_station || !@exit_station ? PENALTY_FARE : zones
+    @entry_station == nil || @exit_station == nil ? PENALTY_FARE : zones
   end
 
   def zones

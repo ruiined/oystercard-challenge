@@ -19,7 +19,8 @@ class JourneyLog
     end
 
     def to_charge
-        @journeys.last.complete? == false ? @journeys.last.fare : 0
+        # @journeys.last.complete? == false ? @journeys.last.fare : 0
+        @journeys.last.complete? ? 0 : current_journey.fare
     end
 
     private
