@@ -1,17 +1,17 @@
 require_relative 'journey'
 
 class JourneyLog
-    def initialize(journey = Journey)
-        @journey = journey
+    def initialize(journey_class = Journey)
+        @journey_class = journey_class
         @journeys = []
     end
     
     def start(station)
-        @journeys << @journey.new(entry_station = station)
+        @journeys << @journey_class.new(station)
     end
 
     def finish(station)
-        @journeys << @journeys.last.finishes(exit_station = station)
+        @journeys << current_journey.finishes(station)
     end
 
     def journeys
@@ -22,9 +22,9 @@ class JourneyLog
         @journeys.last.complete? == false ? @journeys.last.fare : 0
     end
 
-    #private
+    private
 
     def current_journey
-        @journeys.last.complete? ? @journeys.last : @journeys[0]
+        @journeys.last.complete? ? @journey_class.new : @journeys.last
     end
 end
